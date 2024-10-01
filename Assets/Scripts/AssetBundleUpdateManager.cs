@@ -85,38 +85,40 @@ public class AssetBundleUpdateManager : MonoBehaviour
                 //Debug.Log("Remote comparison file info loaded!");
 
                 //Debug.Log("Loading local comparison file info...");
-                GetLocalAssetBundleComparisonFileInfo();
-                //Debug.Log("Localcomparison file info loaded!");
-
-                //UpdateOutdatedBundles();
-                FigureOutBundlesToDownload();
-
-                DownloadNecessaryAssetBundlesFromFTPServer((downloadCompleted) =>
+                GetLocalAssetBundleComparisonFileInfo(() =>
                 {
-                    if (downloadCompleted)
+                    //UpdateOutdatedBundles();
+                    FigureOutBundlesToDownload();
+
+                    DownloadNecessaryAssetBundlesFromFTPServer((downloadCompleted) =>
                     {
-                        DeleteDeprecatedBundles();
+                        if (downloadCompleted)
+                        {
+                            DeleteDeprecatedBundles();
 
-                        //create local bundle comparison file
-                        //CreateBundleComparisonFile(persistentDataPath);
+                            //create local bundle comparison file
+                            //CreateBundleComparisonFile(persistentDataPath);
 
-                        //before delete remote comparison file,
-                        //maybe check if the new generated comparison file is same as the remote file
-                        //to check if the downloaded bundles are intact?
-                        //DeleteTempRemoteBundleComparisonFile();
+                            //before delete remote comparison file,
+                            //maybe check if the new generated comparison file is same as the remote file
+                            //to check if the downloaded bundles are intact?
+                            //DeleteTempRemoteBundleComparisonFile();
 
-                        RenameTempRemoteComparisonFileToLocal();
+                            RenameTempRemoteComparisonFileToLocal();
 
-                        //AssetBundleManager.instance.LoadResourceAsync<TextAsset>("luascripts", "LuaScript.txt", (lua) =>
-                        //{
-                        //    Debug.Log("Lua scripts loaded");
-                        //});
-                    }
-                    else
-                    {
-                        Debug.LogError("Network Error! Failed to update bundles!");
-                    }
+                            //AssetBundleManager.instance.LoadResourceAsync<TextAsset>("luascripts", "LuaScript.txt", (lua) =>
+                            //{
+                            //    Debug.Log("Lua scripts loaded");
+                            //});
+                        }
+                        else
+                        {
+                            Debug.LogError("Network Error! Failed to update bundles!");
+                        }
+                    });
+
                 });
+                //Debug.Log("Localcomparison file info loaded!");
 
             }
             else
@@ -165,11 +167,13 @@ public class AssetBundleUpdateManager : MonoBehaviour
         {
             if (localBundleDictionary.TryGetValue(bundle_remote.Key, out BundleInfo localBundleInfo))
             {
-                if (localBundleInfo.md5 != bundle_remote.Value.md5)
+                if (string.Compare(localBundleInfo.md5, bundle_remote.Value.md5) != 0)
                 {
                     //download this asset bundle
                     //DownloadFileFromFTPServer(bundle_remote.Key, $"{persistentDataPath}/{bundle_remote.Key}");
                     bundleToDownloadList.Add(bundle_remote.Key);
+                    Debug.Log($"local md5: {localBundleInfo.md5}\nremote md5: {bundle_remote.Value.md5}");
+                    Debug.Log($"Added {bundle_remote.Key} to download list");
                 }
             }
             else
@@ -177,6 +181,7 @@ public class AssetBundleUpdateManager : MonoBehaviour
                 //download this asset bundle
                 //DownloadFileFromFTPServer(bundle_remote.Key, $"{persistentDataPath}/{bundle_remote.Key}");
                 bundleToDownloadList.Add(bundle_remote.Key);
+                Debug.Log($"Added {bundle_remote.Key} to download list");
             }
         }
         //Debug.Log("3");
@@ -325,7 +330,9 @@ public class AssetBundleUpdateManager : MonoBehaviour
 
     private void GetAssetBundleComparisonFileInfo(string _comparisonFilePath, ref Dictionary<string, BundleInfo> _outputDictionary)
     {
-        string[] infos = File.ReadAllLines(_comparisonFilePath);
+        //string[] infos = File.ReadAllLines(_comparisonFilePath);
+        string temp = File.ReadAllText(_comparisonFilePath);
+        string[] infos = temp.Split('\n');
         foreach (var element in infos)
         {
             string[] currentBundleInfo = element.Split(" ");
@@ -339,23 +346,22 @@ public class AssetBundleUpdateManager : MonoBehaviour
         //Debug.Log("Comparison file info loaded");
     }
 
-    private void GetAssetBundleComparisonFileInfo_Android(string _comparisonFilePath, Dictionary<string, BundleInfo> _outputDictionary, System.Action OnInfoGet)
+    private void GetAssetBundleComparisonFileInfo_MultiplePlatform(string _comparisonFilePath, Dictionary<string, BundleInfo> _outputDictionary, System.Action OnInfoGet)
     {
-        StartCoroutine(GetAssetBundleComparisonFileInfo_Android_Coroutine(_comparisonFilePath, localBundleDictionary, OnInfoGet));
+        StartCoroutine(GetAssetBundleComparisonFileInfo_MultiplePlatform_Coroutine(_comparisonFilePath, localBundleDictionary, OnInfoGet));
     }
 
-    private IEnumerator GetAssetBundleComparisonFileInfo_Android_Coroutine(string _comparisonFilePath, Dictionary<string, BundleInfo> _outputDictionary, System.Action OnInfoGet)
+    private IEnumerator GetAssetBundleComparisonFileInfo_MultiplePlatform_Coroutine(string _comparisonFilePath, Dictionary<string, BundleInfo> _outputDictionary, System.Action OnInfoGet)
     {
         UnityWebRequest req = UnityWebRequest.Get(new Uri(_comparisonFilePath));
         yield return req.SendWebRequest();
 
         //delete the last chang line symbol
-        string temp = req.downloadHandler.text.Substring(0, req.downloadHandler.text.Length - 1);
+        string temp = req.downloadHandler.text;
         string[] infos = temp.Split('\n');
         foreach (var element in infos)
         {
             string[] currentBundleInfo = element.Split(" ");
-            Debug.Log("******" + currentBundleInfo[0]);
             //0 for name, 1 for size, 2 for md5
             BundleInfo bundleInfo = new BundleInfo(currentBundleInfo[0], currentBundleInfo[1], currentBundleInfo[2]);
             _outputDictionary.Add(currentBundleInfo[0], bundleInfo);
@@ -370,24 +376,31 @@ public class AssetBundleUpdateManager : MonoBehaviour
         GetAssetBundleComparisonFileInfo(persistentDataPath + "/BundleComparisonFile_Remote.txt", ref remoteBundleDictionary);
     }
 
-    private void GetLocalAssetBundleComparisonFileInfo()
+    private void GetLocalAssetBundleComparisonFileInfo(System.Action OnGetInfo)
     {
         //UnityWebRequest req = UnityWebRequest.Get("pee");
         //req.SendWebRequest();
         //Debug.Log(req.downloadHandler.text);
         if (File.Exists(persistentDataPath + "/BundleComparisonFile.txt"))
         {
-            GetAssetBundleComparisonFileInfo(Application.persistentDataPath + "/BundleComparisonFile.txt", ref localBundleDictionary);
-            //GetAssetBundleComparisonFileInfo_Android("file:///" + Application.persistentDataPath + "/BundleComparisonFile.txt", localBundleDictionary);
+            //GetAssetBundleComparisonFileInfo(Application.persistentDataPath + "/BundleComparisonFile.txt", ref localBundleDictionary);
+            GetAssetBundleComparisonFileInfo_MultiplePlatform("file:///" + Application.persistentDataPath + "/BundleComparisonFile.txt", localBundleDictionary, OnGetInfo);
         }
         else if (File.Exists(Application.streamingAssetsPath + "/BundleComparisonFile.txt"))
         {
-            GetAssetBundleComparisonFileInfo(Application.streamingAssetsPath + "/BundleComparisonFile.txt", ref localBundleDictionary);
-            //GetAssetBundleComparisonFileInfo_Android("file:///" + Application.persistentDataPath + "/BundleComparisonFile.txt", localBundleDictionary);
+            string path =
+                #if UNITY_ANDROID
+                    Application.streamingAssetsPath;
+                #else
+                    "file:///" + Application.streamingAssetsPath;
+                #endif
+            //GetAssetBundleComparisonFileInfo(Application.streamingAssetsPath + "/BundleComparisonFile.txt", ref localBundleDictionary);
+            GetAssetBundleComparisonFileInfo_MultiplePlatform(path + "/BundleComparisonFile.txt", localBundleDictionary, OnGetInfo);
         }
         else
         {
             Debug.Log("Didn't find existed local bundle comparison file, will download all the bundles from server");
+            OnGetInfo?.Invoke();
         }
 
         //Debug.Log("2");
@@ -398,13 +411,13 @@ public class AssetBundleUpdateManager : MonoBehaviour
         try
         {
             string platform =
-                #if UNITY_IOS
+#if UNITY_IOS
                 "IOS";
-                #elif UNITY_ANDROID
+#elif UNITY_ANDROID
                 "Android";
-                #else
+#else
                 "PC";
-                #endif
+#endif
 
             FtpWebRequest req = FtpWebRequest.Create(new Uri($"ftp://127.0.0.1/AssetBundles/{platform}/" + _fileName)) as FtpWebRequest;
 
