@@ -1,0 +1,63 @@
+ManifestFileVersion: 0
+CRC: 1701172885
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a8ce9256ad8d4baed549fc71b52bfffa
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b90360021f95c293bf3f1bef88434a62
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: a8ce9256ad8d4baed549fc71b52bfffa
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/ResourcesForHotFix/Images/9affbfd3-4882-4e0e-9c99-d1b4e43658bf.png
+- Assets/ResourcesForHotFix/Images/7f478d0f-4fe8-459e-8d6c-065de878cf0a.png
+- Assets/ResourcesForHotFix/Images/fe3170d1-24b1-40a4-b642-f444644557b3.png
+- Assets/ResourcesForHotFix/Images/8845a39f-4d7a-448a-bf26-c0e283e77a91.png
+- Assets/ResourcesForHotFix/Images/3bc8d493-9860-443c-98f7-a06f5a414301.png
+- Assets/ResourcesForHotFix/Images/f2ae84c1-3c6b-4cfc-a153-6895255076b3.png
+- Assets/ResourcesForHotFix/Images/f852d6ee-9e48-462a-8dfd-896faff3d3ed.png
+- Assets/ResourcesForHotFix/Images/15ddbd72-3093-4762-a0ec-fdd9dae99812.png
+- Assets/ResourcesForHotFix/Images/5e0f7a5b-7f2d-445a-b537-fe99db033b44.png
+- Assets/ResourcesForHotFix/Images/eaca446d-e93d-406f-a2dd-fc8cb37259cc.png
+- Assets/ResourcesForHotFix/Images/37f6bd7c-fd03-41cf-8b4e-b3b727d6a4e7.png
+- Assets/ResourcesForHotFix/Images/49c53c3f-274f-4314-adc7-be410f115a04.png
+- Assets/ResourcesForHotFix/Images/3cbead00-a460-4570-9826-c33dc3bca06f.png
+- Assets/ResourcesForHotFix/Images/3260f7cf-14a2-4cb5-9816-8a3c52459717.png
+- Assets/ResourcesForHotFix/Images/9b419472-6ffc-470e-a5c6-565a7e6b3d6d.png
+- Assets/ResourcesForHotFix/Images/13ea4b3d-019c-46ea-a0d8-e4bbc14ebbe5.png
+- Assets/ResourcesForHotFix/Images/91e97257-832f-4737-a188-7b5cf08fc0f2.png
+- Assets/ResourcesForHotFix/Images/ad4ac592-8f5a-4fae-91f6-ba7a664d110d.png
+- Assets/ResourcesForHotFix/Images/87cd0bd6-0551-48fe-8295-680512c1d9ff.png
+- Assets/ResourcesForHotFix/Images/5ec2c974-03df-4668-a043-11cb6fbde37a.png
+- Assets/ResourcesForHotFix/Images/ae155b1a-0712-4a86-9d85-12461d1a3655.png
+- Assets/ResourcesForHotFix/Images/630dee07-fd1d-43bd-be27-22111d1d1981.png
+- Assets/ResourcesForHotFix/Images/21d29d62-62a1-4eb3-9f89-7a67882e053e.png
+- Assets/ResourcesForHotFix/Images/ffeba8a4-2e96-40b1-a5e6-86e40e4c4d9e.png
+- Assets/ResourcesForHotFix/Images/ac47d7b1-bfc8-4660-98fc-d3c38310e1f6.png
+- Assets/ResourcesForHotFix/Images/eace0953-2ed7-4189-8169-198a807a1846.png
+- Assets/ResourcesForHotFix/Images/44cb7dd9-4c3b-470d-ab8a-39d53b534b71.png
+- Assets/ResourcesForHotFix/Images/505bfe8c-6d6d-4023-8cb5-49be9ca01b94.png
+- Assets/ResourcesForHotFix/Images/3c774c42-1daf-4561-a297-129af2256918.png
+- Assets/ResourcesForHotFix/Images/05b1be02-95ae-477d-bc59-3109040646f6.png
+- Assets/ResourcesForHotFix/Images/42c57cbd-9c19-42eb-9db2-b8ca09f961b9.png
+- Assets/ResourcesForHotFix/Prefabs/Test.mat
+- Assets/ResourcesForHotFix/Images/21fcf5a5-a3ae-4afd-b2ee-ac70a724967e.png
+- Assets/ResourcesForHotFix/Images/441ea89b-411b-403c-813b-b7aee0c81ea1.png
+- Assets/ResourcesForHotFix/Images/6d889c24-1e9d-40cf-a4a2-7e7e9c4e381a.png
+- Assets/ResourcesForHotFix/Images/0d16462d-1edf-4e59-a87d-03c403073125.png
+- Assets/ResourcesForHotFix/Images/8747addf-bd1c-459d-bc39-93d3d1f3aa4d.png
+- Assets/ResourcesForHotFix/Images/06787900-f2ae-4ced-a6f5-09ea6ea5200d.png
+Dependencies: []

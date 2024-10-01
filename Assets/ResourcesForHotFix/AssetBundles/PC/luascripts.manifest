@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 2283783376
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7112ea03d920d04f174a14c1a6ccb629
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 7112ea03d920d04f174a14c1a6ccb629
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/ResourcesForHotFix/LuaScripts/LuaScript2.lua.txt
+- Assets/ResourcesForHotFix/LuaScripts/LuaScipt3.lua.txt
+- Assets/ResourcesForHotFix/LuaScripts/LuaScript.lua.txt
+Dependencies: []

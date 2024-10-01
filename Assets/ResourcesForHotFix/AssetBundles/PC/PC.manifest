@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 2900853484
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: images
+      Dependencies: {}
+    Info_1:
+      Name: luascripts
+      Dependencies: {}
