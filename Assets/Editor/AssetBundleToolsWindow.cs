@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class AssetBundleToolsWindow : EditorWindow
 {
@@ -41,7 +44,16 @@ public class AssetBundleToolsWindow : EditorWindow
 
         if (GUI.Button(new Rect(10, 240, 285, 50), "Upload bundles and comparison file to server"))
         {
-            UploadAllBundlesAndComparisonFileToServer();
+            if (resourceServerAddress.Contains("ftp"))
+            {
+                UploadAllBundlesAndComparisonFileToFTPServer();
+
+            }
+            else if (resourceServerAddress.Contains("http"))
+            {
+                //UploadAllBundlesAndComparisonFileToHTTPServer();
+                DownloadFileFromHTTPServer("File.txt", "E:\\GameProject\\File.txt");
+            }
         }
     }
 
@@ -78,7 +90,7 @@ public class AssetBundleToolsWindow : EditorWindow
     }
 
     //[MenuItem("AssetBundleTools/Upload Bundles and Comparison File To Server")]
-    public void UploadAllBundlesAndComparisonFileToServer()
+    public void UploadAllBundlesAndComparisonFileToFTPServer()
     {
         DirectoryInfo directory = Directory.CreateDirectory(Application.dataPath + $"\\ResourcesForHotFix\\AssetBundles\\{platforms[selectedPlatformIndex]}");
         FileInfo[] fileInfos = directory.GetFiles();
@@ -93,6 +105,94 @@ public class AssetBundleToolsWindow : EditorWindow
                 UploadFileToFTPServer(fileInfo.FullName, fileInfo.Name);
             }
         }
+    }
+
+
+    public void UploadAllBundlesAndComparisonFileToHTTPServer()
+    {
+        DirectoryInfo directory = Directory.CreateDirectory(Application.dataPath + $"\\ResourcesForHotFix\\AssetBundles\\{platforms[selectedPlatformIndex]}");
+        FileInfo[] fileInfos = directory.GetFiles();
+
+        foreach (var fileInfo in fileInfos)
+        {
+            //empty extension is the asset bundle
+            //.txt extension is lua script
+            if (fileInfo.Extension == "" || fileInfo.Extension == ".txt")
+            {
+                //Debug.Log(fileInfo.Name);
+                UploadFileToHTTPServer(fileInfo.FullName, fileInfo.Name);
+            }
+        }
+    }
+
+    private async void DownloadFileFromHTTPServer(string _fileName, string _downloadLocation)
+    {
+        await Task.Run(() =>
+        {
+            try
+            {
+                HttpWebRequest request = HttpWebRequest.Create(new Uri(resourceServerAddress + "/" + _fileName)) as HttpWebRequest;
+                request.Method = WebRequestMethods.Http.Get;
+                request.Proxy = null;
+                request.KeepAlive = false;
+
+                var response = request.GetResponse();
+                Stream downloadStream = response.GetResponseStream();
+
+                using (FileStream fs = new FileStream(_downloadLocation, FileMode.Create))
+                {
+                    byte[] bytes = new byte[2048];
+                    int contentLength = downloadStream.Read(bytes, 0, bytes.Length);
+
+                    while (contentLength > 0)
+                    {
+                        fs.Write(bytes, 0, contentLength);
+
+                        contentLength = downloadStream.Read(bytes, 0, bytes.Length);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+        });
+    }
+
+    private async void UploadFileToHTTPServer(string _filePath, string _fileName)
+    {
+        await Task.Run(() =>
+        {
+            try
+            {
+                HttpWebRequest request = HttpWebRequest.Create(new Uri($"{resourceServerAddress}/AssetBundles/{platforms[selectedPlatformIndex]}/" + _fileName)) as HttpWebRequest;
+                request.Method = WebRequestMethods.Http.Put;
+                request.Proxy = null;
+                request.KeepAlive = false;
+
+                Stream uploadStream = request.GetRequestStream();
+
+                using (FileStream fs = File.OpenRead(_filePath))
+                {
+                    byte[] buffer = new byte[2048];
+                    int contentLength = fs.Read(buffer, 0, buffer.Length);
+
+                    while (contentLength > 0)
+                    {
+                        uploadStream.Write(buffer, 0, contentLength);
+
+                        contentLength = fs.Read(buffer, 0, buffer.Length);
+                    }
+                }
+
+                uploadStream.Close();
+                Debug.Log($"[{_fileName}] uploaded!");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+        });
     }
 
     private async void UploadFileToFTPServer(string _filePath, string _fileName)
