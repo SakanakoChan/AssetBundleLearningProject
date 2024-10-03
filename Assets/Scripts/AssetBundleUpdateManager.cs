@@ -73,8 +73,8 @@ public class AssetBundleUpdateManager : MonoBehaviour
         {
             TextAsset script = luascript as TextAsset;
 
-            //XLuaManager.instance.env.DoString(script.text);
-            XLuaManager.instance.env.DoString("require('LuaScript')");
+            XLuaManager.instance.env.DoString(script.text);
+            //XLuaManager.instance.env.DoString("require('LuaScript')");
         });
     }
 

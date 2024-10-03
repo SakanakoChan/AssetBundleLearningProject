@@ -31,6 +31,11 @@ public class XLuaManager : MonoBehaviour
 
         script = AssetBundleManager.instance.LoadResource("luascripts", $"{_fileName}.lua", typeof(TextAsset)) as TextAsset;
         result = Encoding.UTF8.GetBytes(script.text);
+
+        if (result == null)
+        {
+            Debug.LogError("Error! Unabled to find specified lua script in require function!");
+        }
         return result;
 
         //AssetBundleManager.instance.LoadResourceAsync("luascripts", $"{_fileName}.lua", typeof(TextAsset), (luascript) =>
