@@ -6,12 +6,14 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using XLua;
 
+[LuaCallCSharp]
 public class AssetBundleUpdateManager : MonoBehaviour
 {
     public static AssetBundleUpdateManager instance;
@@ -31,6 +33,7 @@ public class AssetBundleUpdateManager : MonoBehaviour
     private Slider slider;
     [SerializeField] private Transform Canvas;
     [SerializeField] private GameObject loadingScreen;
+    public GameObject PressAnyKeyToStartGameScreen;
 
     private class BundleInfo
     {
@@ -59,7 +62,6 @@ public class AssetBundleUpdateManager : MonoBehaviour
 
         persistentDataPath = Application.persistentDataPath;
         Debug.Log(persistentDataPath);
-
     }
 
     private void Start()
@@ -304,6 +306,7 @@ public class AssetBundleUpdateManager : MonoBehaviour
 
         Destroy(downloadProgressBar);
         loadingScreen.SetActive(false);
+        PressAnyKeyToStartGameScreen.SetActive(true);
 
         OnDownloadProcessEnd?.Invoke(allBundlesDownloadCompleted);
 

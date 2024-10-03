@@ -5,3 +5,12 @@ print("cnm")
 local pee = CS.UnityEngine.GameObject("pee")
 
 pee:AddComponent(typeof(CS.UnityEngine.Rigidbody))
+
+local obj = CS.UnityEngine.GameObject.Find("AssetBundleUpdateManager")
+local script = obj:GetComponent(typeof(CS.AssetBundleUpdateManager))
+startScreen = script.PressAnyKeyToStartGameScreen
+
+print(startScreen)
+
+local textOnScreen = startScreen:GetComponentInChildren(typeof(CS.TMPro.TextMeshProUGUI))
+textOnScreen.text = "***Modified by xlua***\nPress any key to start game"
