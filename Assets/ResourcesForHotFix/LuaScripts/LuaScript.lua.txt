@@ -1,3 +1,5 @@
+require("LuaScript2")
+
 print("cnm")
 
 local pee = CS.UnityEngine.GameObject("pee")

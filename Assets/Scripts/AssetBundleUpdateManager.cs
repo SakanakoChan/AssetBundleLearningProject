@@ -60,11 +60,11 @@ public class AssetBundleUpdateManager : MonoBehaviour
         persistentDataPath = Application.persistentDataPath;
         Debug.Log(persistentDataPath);
 
-        UpdateGame();
     }
 
     private void Start()
     {
+        UpdateGame();
     }
 
     private void ExecuteLuaScript()
@@ -73,7 +73,8 @@ public class AssetBundleUpdateManager : MonoBehaviour
         {
             TextAsset script = luascript as TextAsset;
 
-            XLuaManager.instance.env.DoString(script.text);
+            //XLuaManager.instance.env.DoString(script.text);
+            XLuaManager.instance.env.DoString("require('LuaScript')");
         });
     }
 
