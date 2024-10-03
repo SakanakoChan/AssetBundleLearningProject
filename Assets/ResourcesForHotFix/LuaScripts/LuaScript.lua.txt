@@ -1,1 +1,5 @@
-print("cnm");
+print("cnm")
+
+local pee = CS.UnityEngine.GameObject("pee")
+
+pee:AddComponent(typeof(CS.UnityEngine.Rigidbody))

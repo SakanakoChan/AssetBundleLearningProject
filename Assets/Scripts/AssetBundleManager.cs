@@ -8,7 +8,7 @@ public class AssetBundleManager : MonoBehaviour
 
     private AssetBundle mainBundle = null;
     private AssetBundleManifest mainManifest = null;
-    private string bundlePath { get; } = Application.streamingAssetsPath + "/";
+    private string bundlePath => Application.persistentDataPath + "/";
 
     private Dictionary<string, AssetBundle> bundleDictionary = new Dictionary<string, AssetBundle>();
 
@@ -65,6 +65,7 @@ public class AssetBundleManager : MonoBehaviour
             AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath + _bundleName);
             bundleDictionary.Add(_bundleName, bundle);
         }
+
     }
 
     public Object LoadResource(string _bundleName, string _assetName)
@@ -112,6 +113,7 @@ public class AssetBundleManager : MonoBehaviour
 
     private IEnumerator LoadResourceAsync_Coroutine(string _bundleName, string _assetName, System.Action<Object> _callback)
     {
+        //yield return new WaitForSeconds(1);
         LoadBundle(_bundleName);
 
         AssetBundleRequest request = bundleDictionary[_bundleName].LoadAssetAsync(_assetName);
@@ -122,6 +124,7 @@ public class AssetBundleManager : MonoBehaviour
 
     private IEnumerator LoadResourceAsync_Coroutine(string _bundleName, string _assetName, System.Type _type, System.Action<Object> _callback)
     {
+        //yield return new WaitForSeconds(1);
         LoadBundle(_bundleName);
 
         AssetBundleRequest request = bundleDictionary[_bundleName].LoadAssetAsync(_assetName, _type);
@@ -132,10 +135,16 @@ public class AssetBundleManager : MonoBehaviour
 
     private IEnumerator LoadResourceAsync_Coroutine<T>(string _bundleName, string _assetName, System.Action<T> _callback) where T : Object
     {
+        //yield return new WaitForSeconds(1);
         LoadBundle(_bundleName);
 
         AssetBundleRequest request = bundleDictionary[_bundleName].LoadAssetAsync<T>(_assetName);
         yield return request;
+
+        if (request.asset == null)
+        {
+            Debug.LogError("Didn't get requested asset!");
+        }
 
         _callback(request.asset as T);
     }

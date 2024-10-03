@@ -3,16 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using XLua;
 
 public class AssetBundleUpdateManager : MonoBehaviour
 {
@@ -69,6 +67,15 @@ public class AssetBundleUpdateManager : MonoBehaviour
     {
     }
 
+    private void ExecuteLuaScript()
+    {
+        AssetBundleManager.instance.LoadResourceAsync("luascripts", "LuaScript.lua", typeof(TextAsset), (luascript) =>
+        {
+            TextAsset script = luascript as TextAsset;
+
+            XLuaManager.instance.env.DoString(script.text);
+        });
+    }
 
     public void UpdateGame()
     {
@@ -110,6 +117,8 @@ public class AssetBundleUpdateManager : MonoBehaviour
                             //{
                             //    Debug.Log("Lua scripts loaded");
                             //});
+
+                            ExecuteLuaScript();
                         }
                         else
                         {
@@ -389,11 +398,11 @@ public class AssetBundleUpdateManager : MonoBehaviour
         else if (File.Exists(Application.streamingAssetsPath + "/BundleComparisonFile.txt"))
         {
             string path =
-                #if UNITY_ANDROID
+#if UNITY_ANDROID
                     Application.streamingAssetsPath;
-                #else
+#else
                     "file:///" + Application.streamingAssetsPath;
-                #endif
+#endif
             //GetAssetBundleComparisonFileInfo(Application.streamingAssetsPath + "/BundleComparisonFile.txt", ref localBundleDictionary);
             GetAssetBundleComparisonFileInfo_MultiplePlatform(path + "/BundleComparisonFile.txt", localBundleDictionary, OnGetInfo);
         }

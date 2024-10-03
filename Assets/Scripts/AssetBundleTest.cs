@@ -12,6 +12,11 @@ public class AssetBundleTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //AssetBundleManager.instance.LoadResourceAsync<TextAsset>("luascripts", "LuaSript.lua.txt", (luaScript) =>
+        //{
+        //    XLuaManager.instance.env.DoString(luaScript.text);
+        //});
+
         //AssetBundleManager.instance.LoadResourceAsync<TextAsset>("luascripts", "LuaScript.txt", (lua) =>
         //{
         //    Debug.Log("Lua scripts loaded");
