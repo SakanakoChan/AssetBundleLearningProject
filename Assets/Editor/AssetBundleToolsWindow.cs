@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
-using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class AssetBundleToolsWindow : EditorWindow
 {
